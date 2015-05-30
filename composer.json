@@ -1,0 +1,25 @@
+{
+  "name": "iMega/WalkerXML",
+  "description": "",
+  "keywords": ["xml", "parser", "path"],
+  "homepage": "https://github.com/iMega/WalkerXML",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dmitry Gavriloff",
+      "email": "info@imega.ru",
+      "homepage": "http://imega.ru"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0",
+    "knplabs/gaufrette": "v0.1.9"
+  },
+  "autoload": {
+    "psr-4": {"iMega\\WalkerXML\\": "src/iMega/WalkerXML"}
+  }
+}
