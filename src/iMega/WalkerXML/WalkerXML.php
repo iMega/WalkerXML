@@ -27,7 +27,7 @@ namespace iMega\WalkerXML;
 /**
  * Class WalkerXML
  */
-class WalkerXML implements WalkerXmlInterface
+class WalkerXML implements WalkerXMLInterface
 {
     /**
      * @var \SimpleXMLIterator

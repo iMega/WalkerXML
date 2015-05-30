@@ -24,7 +24,7 @@
  */
 namespace iMega\WalkerXML;
 
-interface WalkerXmlInterface
+interface WalkerXMLInterface
 {
     /**
      * @param \SimpleXMLElement $element Element with attributes.
