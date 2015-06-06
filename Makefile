@@ -7,8 +7,4 @@ build:
 test:
 	@docker run --rm -v `pwd`:/usr/src/myapp -w /usr/src/myapp php:5.6-cli vendor/bin/phpunit --debug
 
-
-x:
-	@docker run --rm -v `pwd`:/usr/src/myapp -w /usr/src/myapp php:5.6-cli php test.php
-
-.PHONY: build test x
+.PHONY: build test

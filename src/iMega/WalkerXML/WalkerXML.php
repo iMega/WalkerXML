@@ -52,32 +52,26 @@ class WalkerXML
     /**
      * Return attributes of element
      *
-     * @param \SimpleXMLElement $element Element with attributes.
+     * @param array $element Element with attributes.
      *
      * @return array
      */
-    public function attribute(\SimpleXMLElement $element)
+    public function attribute(array $element)
     {
-        $attrs = (array) $element->attributes();
-
-        return isset($attrs['@attributes']) ? $attrs['@attributes'] : [];
+        return isset($element['@attributes']) ? $element['@attributes'] : [];
     }
 
     /**
      * Return element
      *
-     * @param string                 $name   Name element.
-     * @param \SimpleXMLElement|null $parent Use parent.
+     * @param string                    $name   Name element.
+     * @param array|\SimpleXMLIterator  $parent Use parent.
      *
-     * @return null|\SimpleXMLElement
+     * @return null|string
      */
-    public function element($name, $parent = null)
+    public function element($name, $parent)
     {
         $result = null;
-
-        if (null === $parent) {
-            $parent = $this->xml;
-        }
 
         $parentArray = (array) $parent;
 
@@ -93,7 +87,7 @@ class WalkerXML
      *
      * param mixed ... a list of elements
      *
-     * @return \SimpleXMLElement
+     * @return null|array
      */
     public function deepElement()
     {
@@ -103,7 +97,7 @@ class WalkerXML
                 $parent = $element;
                 continue;
             }
-            $parent = $this->element($element, $parent);
+            $parent = $this->children($element, $parent);
         }
 
         return $parent;
@@ -115,5 +109,30 @@ class WalkerXML
     public function root()
     {
         return $this->xml;
+    }
+
+    /**
+     * Return element
+     *
+     * @param string                 $name   Name element.
+     * @param \SimpleXMLElement|null $parent Use parent.
+     *
+     * @return null|array
+     */
+    private function children($name, $parent = null)
+    {
+        $result = null;
+
+        if (null === $parent) {
+            $parent = $this->xml;
+        }
+
+        $parentArray = (array) $parent;
+
+        if (! empty($parentArray) && isset($parentArray[$name])) {
+            $result = (array) $parentArray[$name];
+        }
+
+        return $result;
     }
 }

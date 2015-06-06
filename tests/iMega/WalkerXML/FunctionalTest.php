@@ -81,7 +81,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
             Description::CLASSI
         );
 
-        $this->assertInstanceOf('SimpleXMLIterator', $actual);
+        $this->assertInternalType('array', $actual);
     }
 
     /**
@@ -103,11 +103,12 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCheckClassificatorId()
     {
-        $actual = $this->xml->deepElement(
+        $classi = $this->xml->deepElement(
             $this->xml->root(),
-            Description::CLASSI,
-            Description::ID
+            Description::CLASSI
         );
+
+        $actual = $this->xml->element(Description::ID, $classi);
 
         $this->assertEquals('bd72d8f9-55bc-11d9-848a-00112f43529a', $actual);
     }
@@ -117,11 +118,12 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCheckClassificatorName()
     {
-        $actual = $this->xml->deepElement(
+        $classi = $this->xml->deepElement(
             $this->xml->root(),
-            Description::CLASSI,
-            Description::NAME
+            Description::CLASSI
         );
+
+        $actual = $this->xml->element(Description::NAME, $classi);
 
         $this->assertEquals('Классификатор (Каталог товаров)', $actual);
     }
@@ -136,7 +138,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
             Description::CATALOG
         );
 
-        $this->assertInstanceOf('SimpleXMLIterator', $actual);
+        $this->assertInternalType('array', $actual);
     }
 
     /**
