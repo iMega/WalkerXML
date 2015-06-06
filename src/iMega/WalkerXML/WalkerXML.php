@@ -27,7 +27,7 @@ namespace iMega\WalkerXML;
 /**
  * Class WalkerXML
  */
-class WalkerXML implements WalkerXMLInterface
+class WalkerXML
 {
     /**
      * @var \SimpleXMLIterator
@@ -35,18 +35,23 @@ class WalkerXML implements WalkerXMLInterface
     protected $xml;
 
     /**
-     * @param string $data A well-formed XML string or the path or URL to an XML document if data_is_url is TRUE.
+     * @param string $data A well-formed XML string or the path or URL
+     *                     to an XML document if data_is_url is TRUE.
+     *
+     * @throws \Exception An Exception if the XML data could not be parsed.
      */
     public function __construct($data)
     {
         try {
             $this->xml = new \SimpleXMLIterator($data);
         } catch (\Exception $e) {
-            return;
+            throw $e;
         }
     }
 
     /**
+     * Return attributes of element
+     *
      * @param \SimpleXMLElement $element Element with attributes.
      *
      * @return array
@@ -59,29 +64,42 @@ class WalkerXML implements WalkerXMLInterface
     }
 
     /**
-     * @param string $name   Name element.
-     * @param bool   $parent Use parent.
+     * Return element
      *
-     * @return null|array|\SimpleXMLElement[]|\SimpleXMLIterator
+     * @param string                 $name   Name element.
+     * @param \SimpleXMLElement|null $parent Use parent.
+     *
+     * @return null|\SimpleXMLElement
      */
-    public function element($name, $parent = false)
+    public function element($name, $parent = null)
     {
-        if (! $parent) {
+        $result = null;
+
+        if (null === $parent) {
             $parent = $this->xml;
         }
+
         $parentArray = (array) $parent;
 
-        return isset($parentArray[$name]) ? $parentArray[$name] : null;
+        if (! empty($parentArray) && isset($parentArray[$name])) {
+            $result = $parentArray[$name];
+        }
+
+        return $result;
     }
 
     /**
-     * @return null|mixed|\SimpleXMLElement[]|\SimpleXMLIterator
+     * Return a deep element xml
+     *
+     * param mixed ... a list of elements
+     *
+     * @return \SimpleXMLElement
      */
     public function deepElement()
     {
         $parent = null;
         foreach (func_get_args() as $element) {
-            if (! $parent) {
+            if (null === $parent) {
                 $parent = $element;
                 continue;
             }
