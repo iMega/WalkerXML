@@ -27,59 +27,18 @@ namespace iMega\WalkerXML;
 /**
  * Class WalkerXML
  */
-class WalkerXML
+class WalkerXML extends \SimpleXMLIterator
 {
-    /**
-     * @var \SimpleXMLIterator
-     */
-    protected $xml;
-
-    /**
-     * @param string $data A well-formed XML string or the path or URL
-     *                     to an XML document if data_is_url is TRUE.
-     *
-     * @throws \Exception An Exception if the XML data could not be parsed.
-     */
-    public function __construct($data)
-    {
-        try {
-            $this->xml = new \SimpleXMLIterator($data);
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
-
     /**
      * Return attributes of element
      *
-     * @param array $element Element with attributes.
-     *
      * @return array
      */
-    public function attribute(array $element)
+    public function attribute()
     {
+        $element = (array) $this->attributes();
+
         return isset($element['@attributes']) ? $element['@attributes'] : [];
-    }
-
-    /**
-     * Return element
-     *
-     * @param string                    $name   Name element.
-     * @param array|\SimpleXMLIterator  $parent Use parent.
-     *
-     * @return null|string
-     */
-    public function element($name, $parent)
-    {
-        $result = null;
-
-        $parentArray = (array) $parent;
-
-        if (! empty($parentArray) && isset($parentArray[$name])) {
-            $result = $parentArray[$name];
-        }
-
-        return $result;
     }
 
     /**
@@ -87,50 +46,41 @@ class WalkerXML
      *
      * param mixed ... a list of elements
      *
-     * @return null|array
+     * @return array
      */
-    public function deepElement()
+    public function elements()
     {
-        $parent = null;
-        foreach (func_get_args() as $element) {
-            if (null === $parent) {
-                $parent = $element;
-                continue;
-            }
-            $parent = $this->children($element, $parent);
+        $elements = func_get_args();
+        $parent   = array_shift($elements);
+        if ($parent instanceof self) {
+            $result = $parent->xpath(implode($elements, '/'));
+        } else {
+            array_unshift($elements, $parent);
+            $result = $this->xpath(implode($elements, '/'));
         }
 
-        return $parent;
+        if (false === $result || !array_key_exists(0, $result) || count($result[0]) == 0) {
+            $result = [];
+        }
+
+        return $result;
     }
 
     /**
-     * @return \SimpleXMLIterator
-     */
-    public function root()
-    {
-        return $this->xml;
-    }
-
-    /**
-     * Return element
+     * Return value of element
      *
-     * @param string                 $name   Name element.
-     * @param \SimpleXMLElement|null $parent Use parent.
+     * @param string $name Name element.
      *
-     * @return null|array
+     * @return string
      */
-    private function children($name, $parent = null)
+    public function value($name)
     {
-        $result = null;
-
-        if (null === $parent) {
-            $parent = $this->xml;
-        }
-
-        $parentArray = (array) $parent;
-
-        if (! empty($parentArray) && isset($parentArray[$name])) {
-            $result = (array) $parentArray[$name];
+        $result  = '';
+        $element = (array) $this;
+        if (isset($element[$name]) && $element[$name] instanceof self) {
+            $result = '';
+        } elseif (isset($element[$name])) {
+            $result = $element[$name];
         }
 
         return $result;

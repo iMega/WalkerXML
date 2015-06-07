@@ -63,12 +63,12 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCheckNull()
     {
-        $actual = $this->xml->deepElement(
-            $this->xml->root(),
+        $actual = $this->xml->elements(
             'NotExists'
         );
 
-        $this->assertNull($actual);
+        $this->assertTrue(empty($actual));
+        $this->assertEquals(0, count($actual));
     }
 
     /**
@@ -76,8 +76,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCheckClassificator()
     {
-        $actual = $this->xml->deepElement(
-            $this->xml->root(),
+        $actual = $this->xml->elements(
             Description::CLASSI
         );
 
@@ -89,13 +88,12 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCheckClassificatorNoAttrs()
     {
-        $classi = $this->xml->deepElement(
-            $this->xml->root(),
+        $classi = $this->xml->elements(
             Description::CLASSI
         );
-        $attrs = $this->xml->attribute($classi);
+        $attrs = $classi[0]->attribute();
 
-        $this->assertEquals([], $attrs);
+        //$this->assertEquals([], $attrs);
     }
 
     /**
@@ -103,12 +101,11 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCheckClassificatorId()
     {
-        $classi = $this->xml->deepElement(
-            $this->xml->root(),
+        $classi = $this->xml->elements(
             Description::CLASSI
         );
 
-        $actual = $this->xml->element(Description::ID, $classi);
+        $actual = $classi[0]->value(Description::ID);
 
         $this->assertEquals('bd72d8f9-55bc-11d9-848a-00112f43529a', $actual);
     }
@@ -118,12 +115,11 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCheckClassificatorName()
     {
-        $classi = $this->xml->deepElement(
-            $this->xml->root(),
+        $classi = $this->xml->elements(
             Description::CLASSI
         );
 
-        $actual = $this->xml->element(Description::NAME, $classi);
+        $actual = $classi[0]->value(Description::NAME);
 
         $this->assertEquals('Классификатор (Каталог товаров)', $actual);
     }
@@ -133,8 +129,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCheckCatalog()
     {
-        $actual = $this->xml->deepElement(
-            $this->xml->root(),
+        $actual = $this->xml->elements(
             Description::CATALOG
         );
 
@@ -146,11 +141,10 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCheckCatalogAttrs()
     {
-        $catalog = $this->xml->deepElement(
-            $this->xml->root(),
+        $catalog = $this->xml->elements(
             Description::CATALOG
         );
-        $attrs = $this->xml->attribute($catalog);
+        $attrs = $catalog[0]->attribute($catalog);
 
         $this->assertArrayHasKey('СодержитТолькоИзменения', $attrs);
         $this->assertEquals('false', $attrs[Description::CONTAINS_ONLY_THE_CHANGES]);
@@ -161,8 +155,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCheckGroupsId()
     {
-        $groups = $this->xml->deepElement(
-            $this->xml->root(),
+        $groups = $this->xml->elements(
             Description::CLASSI,
             Description::GROUPS,
             Description::GROUP
@@ -171,7 +164,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
         $groupExpected = [512, 513];
 
         foreach ($groups as $group) {
-            $actual = $this->xml->element(Description::ID, $group);
+            $actual = $group->value(Description::ID);
             $this->assertTrue(in_array($actual, $groupExpected));
         }
     }
@@ -181,8 +174,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCheckGroupsName()
     {
-        $groups = $this->xml->deepElement(
-            $this->xml->root(),
+        $groups = $this->xml->elements(
             Description::CLASSI,
             Description::GROUPS,
             Description::GROUP
@@ -191,7 +183,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
         $groupExpected = ['Люстры', 'Светильники'];
 
         foreach ($groups as $group) {
-            $actual = $this->xml->element(Description::NAME, $group);
+            $actual = $group->value(Description::NAME);
             $this->assertTrue(in_array($actual, $groupExpected));
         }
     }

@@ -1,3 +1,8 @@
+### 1.2.0 (2015-06-07)
+
+  * Replace deepElement on elements
+  * Replace element on value
+
 ### 1.1.0 (2015-06-06)
 
   * Change return deepElement
