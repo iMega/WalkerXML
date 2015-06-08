@@ -51,16 +51,14 @@ class WalkerXML extends \SimpleXMLIterator
     public function elements()
     {
         $elements = func_get_args();
-        $parent   = array_shift($elements);
-        if ($parent instanceof self) {
-            $result = $parent->xpath(implode($elements, '/'));
-        } else {
-            array_unshift($elements, $parent);
-            $result = $this->xpath(implode($elements, '/'));
+        $result = $this->xpath(implode($elements, '/'));
+
+        if (! empty($result) && count($result[0]) == 0) {
+            return $result[0]->attribute();
         }
 
-        if (false === $result || !array_key_exists(0, $result) || count($result[0]) == 0) {
-            $result = [];
+        if (false === $result) {
+            return [];
         }
 
         return $result;

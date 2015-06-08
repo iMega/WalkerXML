@@ -1,3 +1,7 @@
+### 1.2.1 (2015-06-09)
+
+  * Fix elements
+
 ### 1.2.0 (2015-06-07)
 
   * Replace deepElement on elements
