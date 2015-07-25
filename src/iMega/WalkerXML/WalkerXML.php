@@ -30,6 +30,11 @@ namespace iMega\WalkerXML;
 class WalkerXML extends \SimpleXMLIterator
 {
     /**
+     * @var string
+     */
+    public $namespace;
+
+    /**
      * Return attributes of element
      *
      * @return array
@@ -51,9 +56,13 @@ class WalkerXML extends \SimpleXMLIterator
     public function elements()
     {
         $elements = func_get_args();
-        $result = $this->xpath(implode($elements, '/'));
+        $prefix = '';
+        if (!empty($this->namespace)) {
+            $prefix = '//';
+        }
+        $result = $this->xpath($prefix . $this->getNamespace() . implode($elements, '/' . $this->getNamespace()));
 
-        if (! empty($result) && count($result[0]) == 0) {
+        if (!empty($result) && count($result[0]) == 0) {
             return $result[0]->attribute();
         }
 
@@ -79,6 +88,21 @@ class WalkerXML extends \SimpleXMLIterator
             $result = '';
         } elseif (isset($element[$name])) {
             $result = $element[$name];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return namespace
+     *
+     * @return string
+     */
+    private function getNamespace()
+    {
+        $result = '';
+        if (!empty($this->namespace)) {
+            $result = "{$this->namespace}:";
         }
 
         return $result;
