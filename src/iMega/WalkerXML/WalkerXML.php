@@ -35,6 +35,11 @@ class WalkerXML extends \SimpleXMLIterator
     public $namespace;
 
     /**
+     * @var bool
+     */
+    public $root = false;
+
+    /**
      * Return attributes of element
      *
      * @return array
@@ -57,7 +62,7 @@ class WalkerXML extends \SimpleXMLIterator
     {
         $elements = func_get_args();
         $prefix = '';
-        if (!empty($this->namespace)) {
+        if ($this->root) {
             $prefix = '//';
         }
         $result = $this->xpath($prefix . $this->getNamespace() . implode($elements, '/' . $this->getNamespace()));

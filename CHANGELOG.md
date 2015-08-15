@@ -1,3 +1,7 @@
+### 1.3.1 (2015-08-15)
+
+  * Fix namespaces in elements
+
 ### 1.3.0 (2015-07-25)
 
   * Add supporting xml namespaces
